@@ -1,24 +1,27 @@
+import config.ConfigLoader;
+
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Main {
     public static void main(String[] args) {
-        final int PORT = 8080;
-        final int QUEUE_SIZE = 10;
+        ConfigLoader configLoader = new ConfigLoader();
+        final int SERVER_PORT = configLoader.getServerPort();
+        final int QUEUE_SIZE = configLoader.getThreadQueueSize();
 
         ConnectionQueue queue = new ConnectionQueue(QUEUE_SIZE);
         System.out.println("Bienvenido al programa de monitorización industrial.\n********************************************************************************");
 
-        while (true) {
-            try (ServerSocket serverSocket = new ServerSocket(PORT)) {
+        try (ServerSocket serverSocket = new ServerSocket(SERVER_PORT)) {
+            while (true) {
                 Socket socket = serverSocket.accept();
 
-                System.out.println("New connection from "+socket.getInetAddress());
+                System.out.println("New connection from " + socket.getInetAddress());
 
                 queue.putInQueue(socket);
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
             }
+        } catch (Exception e){
+            System.out.println("Error: " + e.getMessage());
         }
     }
 }

@@ -8,19 +8,32 @@ public class ConnectionQueue {
 
     public ConnectionQueue(int maxSize) {
         this.maxSize = maxSize;
+        for (int i = 0; i < maxSize; i++) {
+            new ClientHandler(this).start();
+        }
     }
 
-    public synchronized void putInQueue(Socket socket) throws InterruptedException {
+    public synchronized void putInQueue(Socket socket) {
         while (queue.size() >= maxSize) {
-            wait();
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new RuntimeException("Couldn't put in queue: "+e.getMessage());
+            }
         }
         queue.add(socket);
         notifyAll();
     }
 
-    public synchronized Socket getFromQueue() throws InterruptedException {
+    public synchronized Socket getFromQueue() {
         while (queue.isEmpty()) {
-            wait();
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new RuntimeException("Couldn't get from queue: " + e.getMessage());
+            }
         }
         Socket socket = queue.poll();
         notifyAll();
