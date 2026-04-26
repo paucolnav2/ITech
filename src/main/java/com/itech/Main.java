@@ -1,13 +1,15 @@
-import config.ConfigLoader;
+package com.itech;
+
+import com.itech.config.ConfigLoader;
 
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Main {
     public static void main(String[] args) {
-        ConfigLoader configLoader = new ConfigLoader();
-        final int SERVER_PORT = configLoader.getServerPort();
-        final int QUEUE_SIZE = configLoader.getThreadQueueSize();
+        ConfigLoader.validateConfigurationFile();
+        final int SERVER_PORT = ConfigLoader.getServerPort();
+        final int QUEUE_SIZE = ConfigLoader.getThreadQueueSize();
 
         ConnectionQueue queue = new ConnectionQueue(QUEUE_SIZE);
         System.out.println("Bienvenido al programa de monitorización industrial.\n********************************************************************************");
