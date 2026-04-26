@@ -7,10 +7,9 @@ import com.itech.utils.enums.VibrationUnits;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.*;
 
-import static com.itech.utils.helper.Validator.*;
+import static com.itech.utils.helpers.Validator.*;
 
 public class ConfigLoader {
     private static final Properties prop = getConfigurationFile();
@@ -35,9 +34,7 @@ public class ConfigLoader {
         }
 
         if (errorPresent) {
-            System.err.println("Configuration errors present, shutting down...");
-
-            System.exit(1);
+            throw new RuntimeException("Configuration errors present, shutting down...");
         }
     }
 
@@ -99,5 +96,35 @@ public class ConfigLoader {
         catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Invalid vibration unit, check for typos");
         }
+    }
+
+    public static String getDatabaseIPDirection () {
+        String stringDatabaseIPDirection = prop.getProperty("database.ip.direction", "localhost").toLowerCase();
+        if (stringDatabaseIPDirection.matches("localhost") || stringDatabaseIPDirection.matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}")) {
+            return stringDatabaseIPDirection;
+        } else {
+            throw new IllegalArgumentException("Invalid database IP direction");
+        }
+    }
+
+    public static String getDatabasePort () {
+        String stringDatabasePort = prop.getProperty("database.port", "3306");
+        if (stringDatabasePort.matches("\\d{1,5}")) {
+            return stringDatabasePort;
+        } else {
+            throw new IllegalArgumentException("Invalid database port");
+        }
+    }
+
+    public static String getDatabaseName () {
+        return prop.getProperty("database.name", "ITech");
+    }
+
+    public static String getDatabaseUsername () {
+        return prop.getProperty("database.username", "root");
+    }
+
+    public static String getDatabasePassword () {
+        return prop.getProperty("database.password", "root");
     }
 }

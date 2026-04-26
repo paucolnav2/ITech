@@ -1,6 +1,7 @@
 package com.itech;
 
 import com.itech.config.ConfigLoader;
+import com.itech.database.DatabaseManager;
 
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -8,6 +9,7 @@ import java.net.Socket;
 public class Main {
     public static void main(String[] args) {
         ConfigLoader.validateConfigurationFile();
+        DatabaseManager.validateDatabaseConnection();
         final int SERVER_PORT = ConfigLoader.getServerPort();
         final int QUEUE_SIZE = ConfigLoader.getThreadQueueSize();
 
