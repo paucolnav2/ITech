@@ -1,5 +1,6 @@
 package com.itech.clientHandlers;
 
+import com.itech.database.DAOs.SensorDataDAO;
 import com.itech.database.DatabaseManager;
 import com.itech.utils.helpers.Validator;
 
@@ -20,6 +21,7 @@ public class TCPHandler {
     public void handle (String firstLine) {
         String[] sensorMessage = Validator.validateSensorMessage(firstLine);
 
-        DatabaseManager.getConnection();
+        SensorDataDAO sensorDataDAO = new SensorDataDAO();
+        //TODO
     }
 }

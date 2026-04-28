@@ -24,7 +24,7 @@ public class ClientHandler extends Thread {
                 ) {
                     String firstLine = input.readLine();
 
-                    if (firstLine == null || firstLine.isBlank()) {
+                    if (firstLine.isBlank()) {
                         throw new IOException("Message without content received from "+Thread.currentThread().getName());
                     }
 
@@ -33,7 +33,7 @@ public class ClientHandler extends Thread {
                     } else {
                         new TCPHandler(input, output).handle(firstLine);
                     }
-                } catch (IOException e) {
+                } catch (Exception e) {
                     System.out.println("Error in " + Thread.currentThread().getName() + ": " + e.getMessage());
                 } finally {
                     try {
