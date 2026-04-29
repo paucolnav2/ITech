@@ -2,6 +2,9 @@ package com.itech.utils.helpers;
 
 import com.itech.utils.customExceptions.WrongSensorMessageFormat;
 import com.itech.utils.enums.SensorTypes;
+import com.itech.utils.enums.units.*;
+
+import java.lang.reflect.Method;
 
 public class Validator {
     public static boolean validateStringToNumberConversion (String string) {
@@ -32,15 +35,13 @@ public class Validator {
             }
         }
 
-        // cambiado para hacer que la primera parte del argumento sea el id del sensor (en string)
+        // cambiado para hacer que la primera parte del argumento sea el id del sensor (en int)
         /*if (!sensorMessage[0].toUpperCase().matches("SENSOR\\d+")) {
             throw new WrongSensorMessageFormat("incorrect format in part 1 of argument sent");
         }*/
 
-        try {
-            SensorTypes.valueOf(sensorMessage[1].toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new WrongSensorMessageFormat("incorrect format in part 2 of argument sent");
+        if (!sensorMessage[0].matches("\\d+")) {
+            throw new WrongSensorMessageFormat("incorrect format in part 1 of argument sent, only sensor ids (numbers) allowed");
         }
 
         if (!Validator.validateStringToNumberOrDecimalNumberConversion(sensorMessage[2])) {

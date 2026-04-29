@@ -1,0 +1,8 @@
+package com.itech.utils.enums.units;
+
+public enum MoistureUnits {
+    MOISTUREPERCENTAGE,
+    MOISTUREGRAMSPERCUBICMETER,
+    MOISTUREKILOGRAMSPERCUBICMETER,
+    MOISTURECONTENT
+}

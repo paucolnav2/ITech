@@ -17,11 +17,10 @@ public class TCPHandler {
         this.output = output;
     }
 
-    //FORMATO "SENSOR1;TEMPERATURE;86"
+    //FORMATO "SENSORID;FAHRENHEIT;86"
     public void handle (String firstLine) {
         String[] sensorMessage = Validator.validateSensorMessage(firstLine);
 
-        SensorDataDAO sensorDataDAO = new SensorDataDAO();
-        //TODO
+        SensorDataDAO.saveSensorData(sensorMessage);
     }
 }
