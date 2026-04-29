@@ -1,5 +1,6 @@
 package com.itech.clientHandlers;
 
+import com.itech.database.DAOs.SensorDataDAO;
 import com.itech.database.DatabaseManager;
 import com.itech.utils.helpers.Validator;
 
@@ -16,10 +17,10 @@ public class TCPHandler {
         this.output = output;
     }
 
-    //FORMATO "SENSOR1;TEMPERATURE;86"
+    //FORMATO "SENSORID;FAHRENHEIT;86"
     public void handle (String firstLine) {
         String[] sensorMessage = Validator.validateSensorMessage(firstLine);
 
-        DatabaseManager.getConnection();
+        SensorDataDAO.saveSensorData(sensorMessage);
     }
 }

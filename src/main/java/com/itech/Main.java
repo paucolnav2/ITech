@@ -24,7 +24,7 @@ public class Main {
 
                 queue.putInQueue(socket);
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
     }

@@ -6,5 +6,15 @@ public enum SensorTypes {
     // %
     HUMIDITY,
     // HZ
-    VIBRATION
+    VIBRATION,
+    // ATMOSPHERES
+    PRESSURE,
+    // LUX
+    LIGHT,
+    // DB
+    SOUND,
+    // %
+    MOISTURE,
+
+    OTHERS
 }

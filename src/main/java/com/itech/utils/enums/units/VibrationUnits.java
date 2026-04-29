@@ -1,7 +1,7 @@
-package com.itech.utils.enums;
+package com.itech.utils.enums.units;
 
 public enum VibrationUnits {
-    HERTZ,
+    VIBRATIONHERTZ,
     METERSPERSECONDSQUARED,
     G,
     MILLIMETERSPERSECOND,
