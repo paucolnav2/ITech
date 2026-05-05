@@ -1,5 +1,8 @@
 package com.itech.clientHandlers;
 
+import com.google.gson.Gson;
+import com.itech.database.DAOs.SensorDAO;
+import com.itech.utils.classes.Sensor;
 import com.itech.utils.helpers.HttpParser;
 import com.sun.net.httpserver.HttpServer;
 
@@ -41,7 +44,17 @@ public class HTTPHandler {
 
         if (method.equals("GET")) {
             if (route.equals("/sensors")) {
-                SensorDAO.getAllSensors();
+                Gson gson = new Gson();
+
+                List<Sensor> sensorList = SensorDAO.getAllSensors();
+
+                try {
+                    String response = HttpParser.buildHttpResponse(200, gson.toJson(sensorList));
+                    output.write(response);
+                    output.flush();
+                } catch (IOException e) {
+                    throw new RuntimeException("couldn't send response to socket: "+e.getMessage());
+                }
             }
         }
     }

@@ -44,6 +44,12 @@ public class Validator {
             throw new WrongSensorMessageFormat("incorrect format in part 1 of argument sent, only sensor ids (numbers) allowed");
         }
 
+        try {
+            SensorTypes.valueOf(sensorMessage[1]);
+        } catch (IllegalArgumentException e) {
+            throw new WrongSensorMessageFormat("incorrect format in part 2 of argument sent, non-existent type of unit");
+        }
+
         if (!Validator.validateStringToNumberOrDecimalNumberConversion(sensorMessage[2])) {
             throw new WrongSensorMessageFormat("incorrect format in part 3 of argument sent, decimal numbers only");
         }
