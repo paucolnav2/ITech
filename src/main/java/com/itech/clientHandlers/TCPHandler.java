@@ -17,7 +17,7 @@ public class TCPHandler {
         this.output = output;
     }
 
-    //FORMATO "SENSORID;FAHRENHEIT;86"
+    //FORMATO "SENSORID;TEMPERATURE;86"
     public void handle (String firstLine) {
         String[] sensorMessage = Validator.validateSensorMessage(firstLine);
 

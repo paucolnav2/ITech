@@ -1,14 +1,16 @@
 package com.itech.utils.classes;
 
-import com.itech.utils.enums.SensorTypes;
-
 public class Sensor {
     private Integer sensorID;
-    private SensorTypes sensorType;
+    private String sensorType;
+    private Integer machineID;
+    private String sensorName;
 
-    public Sensor(Integer sensorID, String sensorType) {
+    public Sensor(Integer sensorID, String sensorType, Integer machineID, String sensorName) {
         this.sensorID = sensorID;
-        this.sensorType = SensorTypes.valueOf(sensorType);
+        this.sensorType = sensorType;
+        this.machineID = machineID;
+        this.sensorName = sensorName;
     }
 
     public Integer getSensorID() {
@@ -19,11 +21,27 @@ public class Sensor {
         this.sensorID = sensorID;
     }
 
-    public SensorTypes getSensorType() {
+    public String getSensorType() {
         return sensorType;
     }
 
-    public void setSensorType(SensorTypes sensorType) {
+    public void setSensorType(String sensorType) {
         this.sensorType = sensorType;
+    }
+
+    public Integer getMachineID() {
+        return machineID;
+    }
+
+    public void setMachineID(Integer machineID) {
+        this.machineID = machineID;
+    }
+
+    public String getSensorName() {
+        return sensorName;
+    }
+
+    public void setSensorName(String sensorName) {
+        this.sensorName = sensorName;
     }
 }

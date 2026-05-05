@@ -8,8 +8,8 @@ import java.net.Socket;
 
 public class Main {
     public static void main(String[] args) {
-        ConfigLoader.validateConfigurationFile();
-        DatabaseManager.validateDatabaseConnection();
+//        ConfigLoader.validateConfigurationFile();
+//        DatabaseManager.validateDatabaseConnection();
         final int SERVER_PORT = ConfigLoader.getServerPort();
         final int QUEUE_SIZE = ConfigLoader.getThreadQueueSize();
 

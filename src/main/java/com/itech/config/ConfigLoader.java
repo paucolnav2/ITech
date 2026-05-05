@@ -1,8 +1,6 @@
 package com.itech.config;
 
-import com.itech.utils.enums.units.HumidityUnits;
-import com.itech.utils.enums.units.TemperatureUnits;
-import com.itech.utils.enums.units.VibrationUnits;
+import com.itech.utils.enums.units.*;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -68,35 +66,75 @@ public class ConfigLoader {
         }
     }
 
-//    public static TemperatureUnits getTemperatureUnit () {
-//        String stringTemperatureUnit = prop.getProperty("unit.temperature", "CENTIGRADE");
-//        try {
-//            return TemperatureUnits.valueOf(stringTemperatureUnit.toUpperCase());
-//        }
-//        catch (IllegalArgumentException e) {
-//            throw new IllegalArgumentException("Invalid temperature unit, check for typos");
-//        }
-//    }
-//
-//    public static HumidityUnits getHumidityUnit () {
-//        String stringHumidityUnit = prop.getProperty("unit.humidity", "PERCENTAGE");
-//        try {
-//            return HumidityUnits.valueOf(stringHumidityUnit.toUpperCase());
-//        }
-//        catch (IllegalArgumentException e) {
-//            throw new IllegalArgumentException("Invalid humidity unit, check for typos");
-//        }
-//    }
-//
-//    public static VibrationUnits getVibrationUnit () {
-//        String stringVibrationUnit = prop.getProperty("unit.vibration", "HERTZ");
-//        try {
-//            return VibrationUnits.valueOf(stringVibrationUnit.toUpperCase());
-//        }
-//        catch (IllegalArgumentException e) {
-//            throw new IllegalArgumentException("Invalid vibration unit, check for typos");
-//        }
-//    }
+    public static TemperatureUnits getTemperatureUnit () {
+        String stringTemperatureUnit = prop.getProperty("unit.temperature", "CENTIGRADE");
+        try {
+            return TemperatureUnits.valueOf(stringTemperatureUnit.toUpperCase());
+        }
+        catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid temperature unit, check for typos");
+        }
+    }
+
+    public static HumidityUnits getHumidityUnit () {
+        String stringHumidityUnit = prop.getProperty("unit.humidity", "HUMIDITYPERCENTAGE");
+        try {
+            return HumidityUnits.valueOf(stringHumidityUnit.toUpperCase());
+        }
+        catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid humidity unit, check for typos");
+        }
+    }
+
+    public static VibrationUnits getVibrationUnit () {
+        String stringVibrationUnit = prop.getProperty("unit.vibration", "VIBRATIONHERTZ");
+        try {
+            return VibrationUnits.valueOf(stringVibrationUnit.toUpperCase());
+        }
+        catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid vibration unit, check for typos");
+        }
+    }
+
+    public static PressureUnits getPressureUnit () {
+        String stringPressureUnit = prop.getProperty("unit.pressure", "ATMOSPHERES");
+        try {
+            return PressureUnits.valueOf(stringPressureUnit.toUpperCase());
+        }
+        catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid pressure unit, check for typos");
+        }
+    }
+
+    public static LightUnits getLightUnit () {
+        String stringLightUnit = prop.getProperty("unit.light", "LUX");
+        try {
+            return LightUnits.valueOf(stringLightUnit.toUpperCase());
+        }
+        catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid light unit, check for typos");
+        }
+    }
+
+    public static SoundUnits getSoundUnit () {
+        String stringSoundUnit = prop.getProperty("unit.sound", "DECIBELS");
+        try {
+            return SoundUnits.valueOf(stringSoundUnit.toUpperCase());
+        }
+        catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid sound unit, check for typos");
+        }
+    }
+
+    public static MoistureUnits getMoistureUnit () {
+        String stringMoistureUnit = prop.getProperty("unit.moisture", "MOISTUREPERCENTAGE");
+        try {
+            return MoistureUnits.valueOf(stringMoistureUnit.toUpperCase());
+        }
+        catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid moisture unit, check for typos");
+        }
+    }
 
     public static String getDatabaseIPDirection () {
         String stringDatabaseIPDirection = prop.getProperty("database.ip.direction", "localhost").toLowerCase();
