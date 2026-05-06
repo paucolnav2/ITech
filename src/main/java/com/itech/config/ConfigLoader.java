@@ -138,7 +138,7 @@ public class ConfigLoader {
 
     public static String getDatabaseIPDirection () {
         String stringDatabaseIPDirection = prop.getProperty("database.ip.direction", "localhost").toLowerCase();
-        if (stringDatabaseIPDirection.matches("localhost") || stringDatabaseIPDirection.matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}")) {
+        if (stringDatabaseIPDirection.matches("localhost") || stringDatabaseIPDirection.matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}") || stringDatabaseIPDirection.equals("mysql")) {
             return stringDatabaseIPDirection;
         } else {
             throw new IllegalArgumentException("Invalid database IP direction");
@@ -259,7 +259,7 @@ public class ConfigLoader {
 
     public static String getOdooIPDirection () {
         String stringOdooIPDirection = prop.getProperty("odoo.ip.direction", "localhost").toLowerCase();
-        if (stringOdooIPDirection.matches("localhost") || stringOdooIPDirection.matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}")) {
+        if (stringOdooIPDirection.matches("localhost") || stringOdooIPDirection.matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}") || stringOdooIPDirection.equals("odoo")) {
             return stringOdooIPDirection;
         } else {
             throw new IllegalArgumentException("Invalid odoo IP direction");
