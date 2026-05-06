@@ -16,7 +16,6 @@ public class ClientHandler extends Thread {
     public void run() {
         while (true) {
             Socket socket = queue.getFromQueue();
-
             if (socket != null) {
                 try (
                         BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -34,12 +33,12 @@ public class ClientHandler extends Thread {
                         new TCPHandler(input, output).handle(firstLine);
                     }
                 } catch (Exception e) {
-                    System.out.println("Error in " + Thread.currentThread().getName() + ": " + e.getMessage());
+                    System.err.println("Error in " + Thread.currentThread().getName() + ": " + e.getMessage());
                 } finally {
                     try {
                         socket.close();
                     } catch (IOException e) {
-                        System.out.println("Error closing socket in " + Thread.currentThread().getName() + ": " + e.getMessage());
+                        System.err.println("Error closing socket in " + Thread.currentThread().getName() + ": " + e.getMessage());
                     }
                 }
             }

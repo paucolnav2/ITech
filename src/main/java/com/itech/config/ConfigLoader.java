@@ -165,4 +165,125 @@ public class ConfigLoader {
     public static String getDatabasePassword () {
         return prop.getProperty("database.password", "root");
     }
+
+    public static Double getTemperatureLimit () {
+        String stringTemperatureLimit = prop.getProperty("limit.amount.temperature", "100");
+        if (stringTemperatureLimit.matches("-?\\d+(\\.\\d+)?")) {
+            return Double.parseDouble(stringTemperatureLimit);
+        } else {
+            throw new IllegalArgumentException("Invalid temperature limit, decimal numbers only");
+        }
+    }
+
+    //(100|[1-9]?[0-9])(\\.\\d+)? descartado
+    public static Double getHumidityLimit () {
+        String stringHumidityLimit = prop.getProperty("limit.amount.humidity", "98");
+        if (stringHumidityLimit.matches("\\d+(\\.\\d+)?")) {
+            return Double.parseDouble(stringHumidityLimit);
+        } else {
+            throw new IllegalArgumentException("Invalid humidity limit, decimal numbers only up to a hundred");
+        }
+    }
+
+    public static Double getVibrationLimit () {
+        String stringVibrationLimit = prop.getProperty("limit.amount.vibration", "3000");
+        if (stringVibrationLimit.matches("\\d+(\\.\\d+)?")) {
+            return Double.parseDouble(stringVibrationLimit);
+        } else {
+            throw new IllegalArgumentException("Invalid vibration limit, decimal positive numbers only");
+        }
+    }
+
+    public static Double getPressureLimit () {
+        String stringPressureLimit = prop.getProperty("limit.amount.pressure", "5");
+        if (stringPressureLimit.matches("\\d+(\\.\\d+)?")) {
+            return Double.parseDouble(stringPressureLimit);
+        } else {
+            throw new IllegalArgumentException("Invalid pressure limit, decimal positive numbers only");
+        }
+    }
+
+    public static Double getLightLimit () {
+        String stringLightLimit = prop.getProperty("limit.amount.light", "2000");
+        if (stringLightLimit.matches("\\d+(\\.\\d+)?")) {
+            return Double.parseDouble(stringLightLimit);
+        } else {
+            throw new IllegalArgumentException("Invalid light limit, decimal positive numbers only");
+        }
+    }
+
+    public static Double getSoundLimit () {
+        String stringSoundLimit = prop.getProperty("limit.amount.sound", "180");
+        if (stringSoundLimit.matches("-?\\d+(\\.\\d+)?")) {
+            return Double.parseDouble(stringSoundLimit);
+        } else {
+            throw new IllegalArgumentException("Invalid sound limit, decimal numbers only");
+        }
+    }
+
+    public static Double getMoistureLimit () {
+        String stringMoistureLimit = prop.getProperty("limit.amount.moisture", "70");
+        if (stringMoistureLimit.matches("\\d+(\\.\\d+)?")) {
+            return Double.parseDouble(stringMoistureLimit);
+        } else {
+            throw new IllegalArgumentException("Invalid moisture limit, decimal numbers only");
+        }
+    }
+
+//    public static boolean isMultipleAnomalyReportingActivated() {
+//        String stringIsMultipleAnomalyReportingActivated = prop.getProperty("multiple.anomaly.reporting", "true");
+//        if (stringIsMultipleAnomalyReportingActivated.matches("(true|false)")) {
+//            return Boolean.getBoolean(stringIsMultipleAnomalyReportingActivated);
+//        } else {
+//            throw new IllegalArgumentException("Invalid boolean value in multiple anomaly reporting functionality");
+//        }
+//    }
+
+    public static Integer getMultipleAnomalyReportingAmount() {
+        String stringMultipleAnomalyReportingAmount = prop.getProperty("multiple.anomaly.reporting.amount", "3");
+        if (stringMultipleAnomalyReportingAmount.matches("[1-9][0-9]*")) {
+            return Integer.getInteger(stringMultipleAnomalyReportingAmount);
+        } else {
+            throw new IllegalArgumentException("Invalid value in multiple anomaly reporting amount, only positive integers bigger than zero");
+        }
+    }
+
+    public static Integer getMultipleAnomalyReportingTimeInterval() {
+        String stringMultipleAnomalyReportingTimeInterval = prop.getProperty("multiple.anomaly.reporting.time.interval", "300");
+        if (stringMultipleAnomalyReportingTimeInterval.matches("[1-9][0-9]*")) {
+            return Integer.getInteger(stringMultipleAnomalyReportingTimeInterval);
+        } else {
+            throw new IllegalArgumentException("Invalid value in multiple anomaly reporting time interval (seconds), only positive integers bigger than zero");
+        }
+    }
+
+    public static String getOdooIPDirection () {
+        String stringOdooIPDirection = prop.getProperty("odoo.ip.direction", "localhost").toLowerCase();
+        if (stringOdooIPDirection.matches("localhost") || stringOdooIPDirection.matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}")) {
+            return stringOdooIPDirection;
+        } else {
+            throw new IllegalArgumentException("Invalid odoo IP direction");
+        }
+    }
+
+    public static String getOdooPort () {
+        String stringOdooPort = prop.getProperty("odoo.port", "8069");
+        if (stringOdooPort.matches("\\d{1,5}")) {
+            return stringOdooPort;
+        } else {
+            throw new IllegalArgumentException("Invalid odoo port");
+        }
+    }
+
+    public static String getOdooDatabase () {
+        return prop.getProperty("odoo.database", "odoo");
+    }
+
+    public static String getOdooUser () {
+        return prop.getProperty("odoo.user", "odoo");
+    }
+
+    public static String getOdooPassword () {
+        return prop.getProperty("odoo.password", "odoo");
+    }
 }

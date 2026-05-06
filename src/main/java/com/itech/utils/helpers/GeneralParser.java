@@ -33,4 +33,25 @@ public class GeneralParser {
         }
         return dataUnit;
     }
+
+    public static boolean valueIsAnomaly (String dataType, Double value) {
+        switch (dataType) {
+            case "TEMPERATURE":
+                return value > ConfigLoader.getTemperatureLimit();
+            case "HUMIDITY":
+                return value > ConfigLoader.getHumidityLimit();
+            case "VIBRATION":
+                return value > ConfigLoader.getVibrationLimit();
+            case "PRESSURE":
+                return value > ConfigLoader.getPressureLimit();
+            case "LIGHT":
+                return value > ConfigLoader.getLightLimit();
+            case "SOUND":
+                return value > ConfigLoader.getSoundLimit();
+            case "MOISTURE":
+                return value > ConfigLoader.getMoistureLimit();
+            default:
+                return false;
+        }
+    }
 }
