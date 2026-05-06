@@ -1,6 +1,8 @@
 package com.itech.database.DAOs;
 
+import com.itech.config.ConfigLoader;
 import com.itech.database.DatabaseManager;
+import com.itech.database.anomalyHandling.AnomalyHandler;
 import com.itech.utils.helpers.GeneralParser;
 
 import java.sql.*;
@@ -17,10 +19,16 @@ public class SensorDataDAO {
             String dataUnit = GeneralParser.dataTypeToDefaultUnit(sensorData[1]);
             statement.setString(3, dataUnit);
             statement.setDouble(4, Double.parseDouble(sensorData[2]));
-            //TODO
-            statement.setBoolean(5, true);
+
+            boolean isAnomaly = GeneralParser.valueIsAnomaly(sensorData[1], Double.parseDouble(sensorData[2]));
+            statement.setBoolean(5, isAnomaly);
 
             statement.executeQuery();
+            statement.close();
+
+            if (isAnomaly) {
+                AnomalyHandler.handleAnomaly(dataUnit, Integer.parseInt(sensorData[0]));
+            }
         } catch (SQLException e) {
             throw new RuntimeException("Couldn't save sensor data: "+e.getMessage());
         }

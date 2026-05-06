@@ -251,5 +251,3 @@ CREATE TABLE sensor_data (
     CONSTRAINT fk_sensor_id FOREIGN KEY (sensor_id) REFERENCES sensor(id) ON DELETE CASCADE,
     PRIMARY KEY (sensor_id, date_and_time)
 );
-
-CREATE TABLE
