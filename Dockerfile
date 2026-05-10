@@ -16,5 +16,6 @@ FROM eclipse-temurin:21-jdk
 WORKDIR /app
 
 COPY --from=build /app/target/app.jar app.jar
+COPY --from=build /app/config ./config
 
 CMD ["java", "-jar", "app.jar"]

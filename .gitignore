@@ -37,3 +37,11 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### Web Apps ###
+ITechApp/node_modules
+ITechApp/android
+ITechWeb/node_modules
+
+### Claude Code ###
+.claude

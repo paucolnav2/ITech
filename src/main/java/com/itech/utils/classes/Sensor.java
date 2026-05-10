@@ -1,14 +1,16 @@
 package com.itech.utils.classes;
 
+import java.util.List;
+
 public class Sensor {
     private Integer sensorID;
-    private String sensorType;
+    private List<String> sensorTypes;
     private Integer machineID;
     private String sensorName;
 
-    public Sensor(Integer sensorID, String sensorType, Integer machineID, String sensorName) {
+    public Sensor(Integer sensorID, List<String> sensorTypes, Integer machineID, String sensorName) {
         this.sensorID = sensorID;
-        this.sensorType = sensorType;
+        this.sensorTypes = sensorTypes;
         this.machineID = machineID;
         this.sensorName = sensorName;
     }
@@ -21,12 +23,12 @@ public class Sensor {
         this.sensorID = sensorID;
     }
 
-    public String getSensorType() {
-        return sensorType;
+    public List<String> getSensorTypes() {
+        return sensorTypes;
     }
 
-    public void setSensorType(String sensorType) {
-        this.sensorType = sensorType;
+    public void setSensorTypes(List<String> sensorTypes) {
+        this.sensorTypes = sensorTypes;
     }
 
     public Integer getMachineID() {

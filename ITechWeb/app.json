@@ -1,0 +1,44 @@
+{
+  "expo": {
+    "name": "ITechWeb",
+    "slug": "itech-web",
+    "version": "1.0.0",
+    "orientation": "default",
+    "icon": "./assets/images/icon.png",
+    "scheme": "itech-web",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.itech.web"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/icon.png",
+        "backgroundColor": "#0A1628"
+      },
+      "package": "com.itech.web"
+    },
+    "web": {
+      "output": "static",
+      "favicon": "./assets/images/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#0A1628"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
+  }
+}

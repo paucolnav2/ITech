@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Top-level app menu entry -->
+    <menuitem id="menu_iot_maintenance_root"
+              name="IoT Maintenance"
+              sequence="10"/>
+
+    <!-- Tickets submenu -->
+    <menuitem id="menu_iot_maintenance_tickets"
+              name="Tickets"
+              parent="menu_iot_maintenance_root"
+              action="action_helpdesk_ticket"
+              sequence="10"/>
+
+</odoo>
