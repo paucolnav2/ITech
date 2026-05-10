@@ -31,9 +31,9 @@ public class AnomalyHandler {
 
         Integer UID = OdooClient.getOdooUID();
 
-        String name = "Anomaly detected in machine "+machine.getId()+;
+        String name = "Anomaly detected in machine "+machine.getId()+" named \""+machine.getName()+"\".";
 
-        String description = "";
+        String description = "Sensor with id "+sensorId+" detected dangerous anomaly on "+machine.getId()+" named \""+machine.getName()+"\" located on factory with id "+factory.getId()+" named \""+factory.getName()+"\".";
 
         OdooClient.createTicket(UID, name, description);
     }

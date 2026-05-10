@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+
+  mysql:
+    image: mysql:8
+    container_name: itech_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ITech
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - itech_network
+
+  postgres:
+    image: postgres:15
+    container_name: itech_odoo_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: odoo
+      POSTGRES_USER: odoo
+      POSTGRES_PASSWORD: odoo
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - itech_network
+
+  odoo:
+    image: odoo:19
+    container_name: itech_odoo
+    depends_on:
+      - postgres
+    ports:
+      - "8069:8069"
+    environment:
+      HOST: postgres
+      USER: odoo
+      PASSWORD: odoo
+    volumes:
+      - ./odoo:/mnt/extra-addons
+    networks:
+      - itech_network
+
+  java:
+    build: .
+    container_name: itech_java
+    depends_on:
+      - mysql
+      - odoo
+    ports:
+      - "8080:8080"
+    networks:
+      - itech_network
+
+  simulator:
+    build: ./data_simulator
+    container_name: itech_sensor_simulator
+    depends_on:
+      - java
+    networks:
+      - itech_network
+
+volumes:
+  mysql_data:
+  postgres_data:
+
+networks:
+  itech_network:
