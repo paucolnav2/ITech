@@ -15,6 +15,11 @@ services:
       - mysql_data:/var/lib/mysql
     networks:
       - itech_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   postgres:
     image: postgres:15
@@ -42,15 +47,24 @@ services:
       PASSWORD: odoo
     volumes:
       - ./odoo:/mnt/extra-addons
+    command: odoo -i base -d odoo --without-demo=all
     networks:
       - itech_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8069/web/health"]
+      interval: 60s
+      timeout: 5s
+      retries: 30
+      start_period: 120s
 
   java:
     build: .
     container_name: itech_java
     depends_on:
-      - mysql
-      - odoo
+      mysql:
+        condition: service_healthy
+      odoo:
+        condition: service_healthy
     ports:
       - "8080:8080"
     networks:

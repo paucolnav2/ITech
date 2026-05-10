@@ -5,19 +5,21 @@ import com.itech.utils.classes.Sensor;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SensorDAO {
     public static List<Sensor> getAllSensors() {
         List<Sensor> sensorList = new ArrayList<>();
-        String sqlQuery = "SELECT s.id id, u.name AS sensor_type, s.machine_id, s.name name machine_id FROM sensor s JOIN unit_types u ON s.sensor_type_id = u.id";
+        String sqlQuery = "SELECT s.id, s.machine_id, s.name, GROUP_CONCAT(u.name ORDER BY u.name SEPARATOR ',') AS sensor_types FROM sensor s JOIN sensor_unit_types sut ON s.id = sut.sensor_id JOIN unit_types u ON sut.unit_type_id = u.id GROUP BY s.id, s.machine_id, s.name";
         try (
                 Connection connection = DatabaseManager.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sqlQuery);
                 ResultSet resultSet = statement.executeQuery()
         ) {
             while (resultSet.next()) {
-                sensorList.add(new Sensor(resultSet.getInt("id"), resultSet.getString("sensor_type"), resultSet.getInt("machine_id"), resultSet.getString("name")));
+                List<String> types = Arrays.asList(resultSet.getString("sensor_types").split(","));
+                sensorList.add(new Sensor(resultSet.getInt("id"), types, resultSet.getInt("machine_id"), resultSet.getString("name")));
             }
         } catch (SQLException e) {
             throw new RuntimeException("Couldn't get sensors: "+e.getMessage());
