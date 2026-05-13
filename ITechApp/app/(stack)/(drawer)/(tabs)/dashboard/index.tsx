@@ -5,7 +5,6 @@ import { useSensors } from "@/hooks/useSensors";
 import { Machine } from "@/interfaces/machine.interface";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { setParams } from "expo-router/build/global-state/routing";
 import React, { useMemo } from "react";
 import {
   ActivityIndicator,
@@ -48,7 +47,7 @@ const Dashboard = () => {
       machine={item}
       sensorCount={sensorCountByMachine[item.id]}
       onPress={() =>
-        router.push("../../../../screens/maquina", setParams({ id: item.id }))
+        router.push({ pathname: "../../../../screens/maquina", params: { id: item.id } })
       }
     />
   );

@@ -5,7 +5,6 @@ import { useSensors } from "@/hooks/useSensors";
 import { Machine } from "@/interfaces/machine.interface";
 import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
-import { setParams } from "expo-router/build/global-state/routing";
 import React, { useMemo } from "react";
 import {
   ActivityIndicator,
@@ -19,7 +18,7 @@ const FabricaDetail = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const factoryId = Number(id);
 
-  const { data: factory, error: errorFactory } = useFactory(factoryId);
+  const { data: factory } = useFactory(factoryId);
   const { data: machines, loading: loadingMachines, error: errorMachines } = useFactoryMachines(factoryId);
   const { data: sensors } = useSensors();
 
@@ -46,15 +45,6 @@ const FabricaDetail = () => {
               {factory?.name ?? `Fábrica #${factoryId}`}
             </Text>
             <Text style={styles.factoryId}>Instalación ID: {factoryId}</Text>
-
-            {errorFactory && (
-              <View style={styles.infoBanner}>
-                <Ionicons name="information-circle" size={14} color={Colors.warning} />
-                <Text style={styles.infoBannerText}>
-                  Endpoint /factories/{factoryId} no implementado aún en el servidor.
-                </Text>
-              </View>
-            )}
 
             <View style={styles.statsGrid}>
               <View style={[styles.statBox, { borderColor: Colors.primary }]}>
@@ -95,7 +85,7 @@ const FabricaDetail = () => {
                     machine={machine}
                     sensorCount={sensorCountByMachine[machine.id]}
                     onPress={() =>
-                      router.push("../maquina", setParams({ id: machine.id }))
+                      router.push({ pathname: "/screens/maquina", params: { id: machine.id } })
                     }
                   />
                 </View>
@@ -160,20 +150,6 @@ const styles = StyleSheet.create({
   factoryId: {
     color: Colors.muted,
     fontSize: 13,
-  },
-  infoBanner: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    gap: 8,
-    backgroundColor: Colors.warning + "15",
-    borderRadius: 8,
-    padding: 10,
-  },
-  infoBannerText: {
-    color: Colors.warning,
-    fontSize: 12,
-    flex: 1,
-    lineHeight: 18,
   },
   statsGrid: {
     flexDirection: "row",

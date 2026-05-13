@@ -5,7 +5,6 @@ import { useSensors } from "@/hooks/useSensors";
 import { Machine } from "@/interfaces/machine.interface";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { setParams } from "expo-router/build/global-state/routing";
 import React, { useMemo } from "react";
 import {
   ActivityIndicator,
@@ -48,7 +47,7 @@ const Dashboard = () => {
       machine={item}
       sensorCount={sensorCountByMachine[item.id]}
       onPress={() =>
-        router.push("../../../../screens/maquina", setParams({ id: item.id }))
+        router.push({ pathname: "../../../../screens/maquina", params: { id: item.id } })
       }
     />
   );
@@ -106,10 +105,6 @@ const Dashboard = () => {
         <View style={styles.errorBox}>
           <Ionicons name="cloud-offline" size={40} color={Colors.muted} />
           <Text style={styles.errorText}>{errorMachines}</Text>
-          <Text style={styles.errorHint}>
-            El endpoint /machines aún no está implementado en el servidor Java.
-            Implementar en HTTPHandler para mostrar el estado de las máquinas.
-          </Text>
         </View>
       ) : machines.length === 0 ? (
         <View style={styles.emptyBox}>
@@ -124,7 +119,7 @@ const Dashboard = () => {
                 machine={machine}
                 sensorCount={sensorCountByMachine[machine.id]}
                 onPress={() =>
-                  router.push("../../../../screens/maquina", setParams({ id: machine.id }))
+                  router.push({ pathname: "../../../../screens/maquina", params: { id: machine.id } })
                 }
               />
             </View>
@@ -244,12 +239,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "600",
     textAlign: "center",
-  },
-  errorHint: {
-    color: Colors.muted,
-    fontSize: 13,
-    textAlign: "center",
-    maxWidth: 500,
   },
   emptyBox: {
     alignItems: "center",

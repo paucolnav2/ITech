@@ -24,10 +24,11 @@ public class AnomalyHandler {
         }
     }
 
-    //TODO
     public static void alertAnomaly(Integer sensorId) {
         Machine machine = MachineDAO.getMachineBySensorId(sensorId);
         Factory factory = FactoryDAO.getFactoryByMachineId(machine.getFactoryId());
+
+        MachineDAO.updateMachineState(machine.getId(), false);
 
         Integer UID = OdooClient.getOdooUID();
 
@@ -36,6 +37,15 @@ public class AnomalyHandler {
         String description = "Sensor with id "+sensorId+" detected dangerous anomaly on "+machine.getId()+" named \""+machine.getName()+"\" located on factory with id "+factory.getId()+" named \""+factory.getName()+"\".";
 
         OdooClient.createTicket(UID, name, description);
+    }
+
+    public static void checkRecovery(Integer sensorId) {
+        Machine machine = MachineDAO.getMachineBySensorId(sensorId);
+        if (Boolean.TRUE.equals(machine.getHasGreenState())) return;
+        boolean hasRecent = MachineDAO.machineHasRecentAnomalies(machine.getId());
+        if (!hasRecent) {
+            MachineDAO.updateMachineState(machine.getId(), true);
+        }
     }
 
     public static boolean checkMultipleAnomaly (String dataUnit, Integer sensorId) {

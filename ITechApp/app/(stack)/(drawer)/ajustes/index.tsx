@@ -88,36 +88,6 @@ const Ajustes = () => {
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Endpoints del servidor</Text>
-        <View style={styles.card}>
-          {[
-            { path: "GET /sensors", desc: "Lista todos los sensores", available: true },
-            { path: "GET /machines", desc: "Lista todas las máquinas", available: false },
-            { path: "GET /machines/{id}", desc: "Detalle de máquina", available: false },
-            { path: "GET /factories", desc: "Lista todas las fábricas", available: false },
-            { path: "GET /factories/{id}", desc: "Detalle de fábrica", available: false },
-            { path: "GET /sensor-data/{id}", desc: "Datos históricos del sensor", available: false },
-            { path: "GET /anomalies", desc: "Anomalías recientes", available: false },
-          ].map((ep, idx, arr) => (
-            <View
-              key={ep.path}
-              style={[styles.endpoint, idx < arr.length - 1 && styles.endpointBorder]}
-            >
-              <Ionicons
-                name={ep.available ? "checkmark-circle" : "time"}
-                size={16}
-                color={ep.available ? Colors.success : Colors.muted}
-              />
-              <View style={styles.endpointInfo}>
-                <Text style={styles.endpointPath}>{ep.path}</Text>
-                <Text style={styles.endpointDesc}>{ep.desc}</Text>
-              </View>
-            </View>
-          ))}
-        </View>
-      </View>
-
-      <View style={styles.section}>
         <Text style={styles.sectionTitle}>Acerca de</Text>
         <View style={styles.card}>
           <View style={styles.row}>
@@ -210,29 +180,5 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
     fontSize: 15,
-  },
-  endpoint: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    padding: 12,
-    gap: 10,
-  },
-  endpointBorder: {
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.cardBorder,
-  },
-  endpointInfo: {
-    flex: 1,
-  },
-  endpointPath: {
-    color: Colors.text,
-    fontSize: 12,
-    fontFamily: "monospace",
-    fontWeight: "600",
-  },
-  endpointDesc: {
-    color: Colors.muted,
-    fontSize: 11,
-    marginTop: 2,
   },
 });

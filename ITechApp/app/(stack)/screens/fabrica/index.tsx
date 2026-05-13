@@ -5,7 +5,6 @@ import { useSensors } from "@/hooks/useSensors";
 import { Machine } from "@/interfaces/machine.interface";
 import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
-import { setParams } from "expo-router/build/global-state/routing";
 import React, { useMemo } from "react";
 import {
   ActivityIndicator,
@@ -20,7 +19,7 @@ const FabricaDetail = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const factoryId = Number(id);
 
-  const { data: factory, loading: loadingFactory, error: errorFactory } = useFactory(factoryId);
+  const { data: factory } = useFactory(factoryId);
   const { data: machines, loading: loadingMachines, error: errorMachines } = useFactoryMachines(factoryId);
   const { data: sensors } = useSensors();
 
@@ -70,14 +69,6 @@ const FabricaDetail = () => {
           </View>
         </View>
 
-        {errorFactory && (
-          <View style={styles.errorBanner}>
-            <Ionicons name="information-circle" size={14} color={Colors.warning} />
-            <Text style={styles.errorBannerText}>
-              El endpoint /factories/{factoryId} aún no está implementado
-            </Text>
-          </View>
-        )}
       </View>
 
       <Text style={styles.sectionTitle}>Máquinas</Text>
@@ -100,7 +91,7 @@ const FabricaDetail = () => {
               machine={item}
               sensorCount={sensorCountByMachine[item.id]}
               onPress={() =>
-                router.push("../maquina", setParams({ id: item.id }))
+                router.push({ pathname: "/screens/maquina", params: { id: item.id } })
               }
             />
           )}
@@ -184,20 +175,6 @@ const styles = StyleSheet.create({
     width: 1,
     height: 30,
     backgroundColor: Colors.cardBorder,
-  },
-  errorBanner: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
-    marginTop: 12,
-    backgroundColor: Colors.warning + "15",
-    borderRadius: 8,
-    padding: 8,
-  },
-  errorBannerText: {
-    color: Colors.warning,
-    fontSize: 12,
-    flex: 1,
   },
   sectionTitle: {
     color: Colors.text,

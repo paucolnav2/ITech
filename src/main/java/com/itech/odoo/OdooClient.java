@@ -9,6 +9,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class OdooClient {
     private static final String ODOO_URL = "http://" + ConfigLoader.getOdooIPDirection()+ ":"+ConfigLoader.getOdooPort()+"/jsonrpc";
@@ -67,18 +69,13 @@ public class OdooClient {
             params.addProperty("service", "object");
             params.addProperty("method", "execute_kw");
 
+            Map<String, Object> vals = new LinkedHashMap<>();
+            vals.put("name", name);
+            vals.put("description", description);
+
             Object[] args = new Object[]{
                     ODOO_DB, UID, ODOO_PASSWORD, "helpdesk.ticket", "create",
-                    new Object[]{
-                            new Object[]{
-                                    new Object[]{
-                                            "name", name
-                                    },
-                                    new Object[]{
-                                            "description", description
-                                    }
-                            }
-                    }
+                    new Object[]{vals}
             };
 
             params.add("args", gson.toJsonTree(args));
