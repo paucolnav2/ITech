@@ -1,11 +1,11 @@
 import SensorTypeBadge from "@/components/SensorTypeBadge";
 import { Colors } from "@/constants/theme";
+import { useMachines } from "@/hooks/useMachines";
 import { useSensors } from "@/hooks/useSensors";
 import { Sensor } from "@/interfaces/sensor.interface";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { setParams } from "expo-router/build/global-state/routing";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -19,21 +19,34 @@ import {
 
 const Sensores = () => {
   const { data, loading, error, refetch } = useSensors();
+  const { data: machines } = useMachines();
   const [query, setQuery] = useState("");
+
+  const machineStateMap = useMemo(() => {
+    const map: Record<number, boolean> = {};
+    machines.forEach((m) => { map[m.id] = m.hasGreenState; });
+    return map;
+  }, [machines]);
 
   const filtered = query.trim()
     ? data.filter(
         (s) =>
           s.sensorName.toLowerCase().includes(query.toLowerCase()) ||
-          s.sensorType.toLowerCase().includes(query.toLowerCase()),
+          s.sensorTypes.some((t) => t.toLowerCase().includes(query.toLowerCase())),
       )
     : data;
 
-  const renderItem = ({ item }: { item: Sensor }) => (
+  const renderItem = ({ item }: { item: Sensor }) => {
+    const machineIsGreen = machineStateMap[item.machineID] ?? true;
+    return (
     <Pressable
-      style={({ pressed }) => [styles.card, pressed && { opacity: 0.8 }]}
+      style={({ pressed }) => [
+        styles.card,
+        { borderLeftColor: machineIsGreen ? Colors.success : Colors.danger },
+        pressed && { opacity: 0.8 },
+      ]}
       onPress={() =>
-        router.push("../../../../screens/sensor", setParams({ id: item.sensorID }))
+        router.push({ pathname: "../../../../screens/sensor", params: { id: item.sensorID } })
       }
     >
       <View style={styles.cardHeader}>
@@ -46,11 +59,16 @@ const Sensores = () => {
           </Text>
           <Text style={styles.machineLabel}>Máquina #{item.machineID}</Text>
         </View>
-        <SensorTypeBadge type={item.sensorType} />
         <Ionicons name="chevron-forward" size={16} color={Colors.muted} />
+      </View>
+      <View style={styles.badgesRow}>
+        {item.sensorTypes.map((type) => (
+          <SensorTypeBadge key={type} type={type} />
+        ))}
       </View>
     </Pressable>
   );
+  };
 
   return (
     <View style={styles.container}>
@@ -152,6 +170,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     borderWidth: 1,
     borderColor: Colors.cardBorder,
+    borderLeftWidth: 3,
   },
   cardHeader: {
     flexDirection: "row",
@@ -178,6 +197,12 @@ const styles = StyleSheet.create({
     color: Colors.muted,
     fontSize: 12,
     marginTop: 2,
+  },
+  badgesRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 4,
+    marginTop: 8,
   },
   list: {
     paddingBottom: 20,

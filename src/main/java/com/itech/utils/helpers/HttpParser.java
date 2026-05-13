@@ -27,20 +27,18 @@ public class HttpParser {
     }
 
     public static String buildHttpResponse(int code, String body) {
-        String httpMessage = "HTTP/1.1 "+code+" "+httpCodeToMessage(code)+"\r\n";
-
+        String httpMessage = "HTTP/1.1 " + code + " " + httpCodeToMessage(code) + "\r\n";
         httpMessage = httpMessage.concat("Content-Type: application/json\r\n");
-
-        httpMessage = httpMessage.concat("Content-Length: "+body.length()+"\r\n");
-
+        httpMessage = httpMessage.concat("Content-Length: " + body.getBytes(java.nio.charset.StandardCharsets.UTF_8).length + "\r\n");
+        httpMessage = httpMessage.concat("Access-Control-Allow-Origin: *\r\n");
+        httpMessage = httpMessage.concat("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS\r\n");
+        httpMessage = httpMessage.concat("Access-Control-Allow-Headers: Content-Type, Authorization\r\n");
         httpMessage = httpMessage.concat("\r\n");
-
         httpMessage = httpMessage.concat(body);
-
         return httpMessage;
     }
 
-    public static String httpCodeToMessage (int code) {
+    public static String httpCodeToMessage(int code) {
         return switch (code) {
             case 200 -> "OK";
             case 201 -> "Created";
@@ -50,6 +48,7 @@ public class HttpParser {
             case 404 -> "Not Found";
             case 405 -> "Method Not Allowed";
             case 418 -> "I'm a teapot";
+            case 500 -> "Internal Server Error";
             default -> throw new IllegalArgumentException("Code given unknown");
         };
     }

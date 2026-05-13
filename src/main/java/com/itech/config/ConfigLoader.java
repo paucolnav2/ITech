@@ -242,7 +242,7 @@ public class ConfigLoader {
     public static Integer getMultipleAnomalyReportingAmount() {
         String stringMultipleAnomalyReportingAmount = prop.getProperty("multiple.anomaly.reporting.amount", "3");
         if (stringMultipleAnomalyReportingAmount.matches("[1-9][0-9]*")) {
-            return Integer.getInteger(stringMultipleAnomalyReportingAmount);
+            return Integer.parseInt(stringMultipleAnomalyReportingAmount);
         } else {
             throw new IllegalArgumentException("Invalid value in multiple anomaly reporting amount, only positive integers bigger than zero");
         }
@@ -251,9 +251,18 @@ public class ConfigLoader {
     public static Integer getMultipleAnomalyReportingTimeInterval() {
         String stringMultipleAnomalyReportingTimeInterval = prop.getProperty("multiple.anomaly.reporting.time.interval", "300");
         if (stringMultipleAnomalyReportingTimeInterval.matches("[1-9][0-9]*")) {
-            return Integer.getInteger(stringMultipleAnomalyReportingTimeInterval);
+            return Integer.parseInt(stringMultipleAnomalyReportingTimeInterval);
         } else {
             throw new IllegalArgumentException("Invalid value in multiple anomaly reporting time interval (seconds), only positive integers bigger than zero");
+        }
+    }
+
+    public static Integer getGreenStateSwitchingTimeInterval() {
+        String stringGreenStateSwitchingTimeInterval = prop.getProperty("green.state.switching.time.interval", "300");
+        if (stringGreenStateSwitchingTimeInterval.matches("[1-9][0-9]*")) {
+            return Integer.parseInt(stringGreenStateSwitchingTimeInterval);
+        } else {
+            throw new IllegalArgumentException("Invalid value in green state switching time interval (seconds), only positive integers bigger than zero");
         }
     }
 

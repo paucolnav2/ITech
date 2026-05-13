@@ -1,37 +1,32 @@
 package com.itech.utils.classes;
 
 public class SensorData {
-    private Sensor sensor;
+    private Integer sensorId;
     private Double sensorValue;
     private String dateAndTime;
+    private Boolean isAnomaly;
+    private String dataUnit;
 
-    public SensorData(Sensor sensor, Double sensorValue, String dateAndTime) {
-        this.sensor = sensor;
+    public SensorData(Integer sensorId, Double sensorValue, String dateAndTime, Boolean isAnomaly, String dataUnit) {
+        this.sensorId = sensorId;
         this.sensorValue = sensorValue;
         this.dateAndTime = dateAndTime;
+        this.isAnomaly = isAnomaly;
+        this.dataUnit = dataUnit;
     }
 
-    public Sensor getSensor() {
-        return sensor;
-    }
+    public Integer getSensorId() { return sensorId; }
+    public void setSensorId(Integer sensorId) { this.sensorId = sensorId; }
 
-    public void setSensor(Sensor sensor) {
-        this.sensor = sensor;
-    }
+    public Double getSensorValue() { return sensorValue; }
+    public void setSensorValue(Double sensorValue) { this.sensorValue = sensorValue; }
 
-    public Double getSensorValue() {
-        return sensorValue;
-    }
+    public String getDateAndTime() { return dateAndTime; }
+    public void setDateAndTime(String dateAndTime) { this.dateAndTime = dateAndTime; }
 
-    public void setSensorValue(Double sensorValue) {
-        this.sensorValue = sensorValue;
-    }
+    public Boolean getIsAnomaly() { return isAnomaly; }
+    public void setIsAnomaly(Boolean isAnomaly) { this.isAnomaly = isAnomaly; }
 
-    public String getDateAndTime() {
-        return dateAndTime;
-    }
-
-    public void setDateAndTime(String dateAndTime) {
-        this.dateAndTime = dateAndTime;
-    }
+    public String getDataUnit() { return dataUnit; }
+    public void setDataUnit(String dataUnit) { this.dataUnit = dataUnit; }
 }

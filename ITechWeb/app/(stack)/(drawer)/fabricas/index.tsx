@@ -3,7 +3,6 @@ import { useFactories } from "@/hooks/useFactories";
 import { Factory } from "@/interfaces/factory.interface";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { setParams } from "expo-router/build/global-state/routing";
 import React from "react";
 import {
   ActivityIndicator,
@@ -38,8 +37,6 @@ const Fabricas = () => {
           <Ionicons name="cloud-offline" size={48} color={Colors.muted} />
           <Text style={styles.errorText}>{error}</Text>
           <Text style={styles.errorHint}>
-            El endpoint /factories aún no está implementado en el servidor Java.{"\n"}
-            Añadir ruta en HTTPHandler que retorne todas las fábricas de la base de datos.
           </Text>
         </View>
       ) : (
@@ -61,7 +58,7 @@ const Fabricas = () => {
             <Pressable
               style={({ pressed }) => [styles.card, pressed && { opacity: 0.85 }]}
               onPress={() =>
-                router.push("../../screens/fabrica", setParams({ id: item.id }))
+                router.push({ pathname: "../../screens/fabrica", params: { id: item.id } })
               }
             >
               <View style={styles.cardTop}>

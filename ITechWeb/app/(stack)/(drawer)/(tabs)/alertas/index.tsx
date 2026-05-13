@@ -1,9 +1,11 @@
 import AnomalyCard from "@/components/AnomalyCard";
 import { Colors } from "@/constants/theme";
 import { useAnomalies } from "@/hooks/useAnomalies";
+import { useMachines } from "@/hooks/useMachines";
 import { Anomaly } from "@/interfaces/anomaly.interface";
+import { Machine } from "@/interfaces/machine.interface";
 import { Ionicons } from "@expo/vector-icons";
-import React from "react";
+import React, { useMemo } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -15,8 +17,48 @@ import {
 
 const Alertas = () => {
   const { data, loading, error, refetch } = useAnomalies();
+  const { data: machines, refetch: refetchMachines } = useMachines();
 
   const criticalCount = data.length;
+  const alertMachines = useMemo(
+    () => machines.filter((m) => !m.hasGreenState),
+    [machines],
+  );
+
+  const onRefresh = () => {
+    refetch();
+    refetchMachines();
+  };
+
+  const listHeader = (
+    <>
+      {alertMachines.length > 0 && (
+        <View style={styles.alertMachinesSection}>
+          <View style={styles.sectionTitleRow}>
+            <Ionicons name="warning" size={16} color={Colors.danger} />
+            <Text style={styles.sectionTitle}>
+              Máquinas en alerta ({alertMachines.length})
+            </Text>
+          </View>
+          <View style={styles.alertMachinesGrid}>
+            {alertMachines.map((m: Machine) => (
+              <View key={m.id} style={styles.alertMachineChip}>
+                <Ionicons name="hardware-chip" size={14} color={Colors.danger} />
+                <Text style={styles.alertMachineName}>{m.name}</Text>
+                <Text style={styles.alertMachineId}>#{m.id}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+      )}
+      <View style={styles.summaryBar}>
+        <Ionicons name="information-circle" size={16} color={Colors.warning} />
+        <Text style={styles.summaryText}>
+          Mostrando {criticalCount} anomalía{criticalCount !== 1 ? "s" : ""} reciente{criticalCount !== 1 ? "s" : ""}
+        </Text>
+      </View>
+    </>
+  );
 
   return (
     <View style={styles.container}>
@@ -41,10 +83,6 @@ const Alertas = () => {
         <View style={styles.errorBox}>
           <Ionicons name="cloud-offline" size={48} color={Colors.muted} />
           <Text style={styles.errorText}>{error}</Text>
-          <Text style={styles.errorHint}>
-            El endpoint /anomalies aún no está implementado en el servidor Java.{"\n"}
-            Añadir ruta en HTTPHandler que retorne las filas de sensor_data donde is_anomaly = TRUE.
-          </Text>
         </View>
       ) : data.length === 0 ? (
         <View style={styles.emptyBox}>
@@ -55,32 +93,22 @@ const Alertas = () => {
           </Text>
         </View>
       ) : (
-        <View style={styles.listWrapper}>
-          <View style={styles.summaryBar}>
-            <Ionicons name="information-circle" size={16} color={Colors.warning} />
-            <Text style={styles.summaryText}>
-              Mostrando {data.length} anomalía{data.length !== 1 ? "s" : ""} reciente{data.length !== 1 ? "s" : ""}
-            </Text>
-          </View>
-          <FlatList
-            data={data}
-            keyExtractor={(item, idx) =>
-              `${item.sensorId}-${item.dateAndTime}-${idx}`
-            }
-            renderItem={({ item }: { item: Anomaly }) => (
-              <AnomalyCard anomaly={item} />
-            )}
-            contentContainerStyle={styles.list}
-            refreshControl={
-              <RefreshControl
-                refreshing={loading}
-                onRefresh={refetch}
-                tintColor={Colors.danger}
-              />
-            }
-            showsVerticalScrollIndicator={false}
-          />
-        </View>
+        <FlatList
+          data={data}
+          keyExtractor={(item, idx) => `${item.sensorId}-${item.dateAndTime}-${idx}`}
+          renderItem={({ item }: { item: Anomaly }) => <AnomalyCard anomaly={item} />}
+          ListHeaderComponent={listHeader}
+          ListHeaderComponentStyle={styles.listHeader}
+          contentContainerStyle={styles.list}
+          refreshControl={
+            <RefreshControl
+              refreshing={loading}
+              onRefresh={onRefresh}
+              tintColor={Colors.danger}
+            />
+          }
+          showsVerticalScrollIndicator={false}
+        />
       )}
     </View>
   );
@@ -126,14 +154,57 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 13,
   },
-  listWrapper: {
-    flex: 1,
+  listHeader: {
+    marginBottom: 14,
+  },
+  alertMachinesSection: {
+    backgroundColor: Colors.danger + "12",
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: Colors.danger + "40",
+  },
+  sectionTitleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    marginBottom: 12,
+  },
+  sectionTitle: {
+    color: Colors.danger,
+    fontSize: 14,
+    fontWeight: "700",
+  },
+  alertMachinesGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 10,
+  },
+  alertMachineChip: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    backgroundColor: Colors.danger + "20",
+    borderRadius: 20,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderWidth: 1,
+    borderColor: Colors.danger + "40",
+  },
+  alertMachineName: {
+    color: Colors.text,
+    fontSize: 13,
+    fontWeight: "600",
+  },
+  alertMachineId: {
+    color: Colors.muted,
+    fontSize: 12,
   },
   summaryBar: {
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
-    marginBottom: 14,
     backgroundColor: Colors.warning + "15",
     borderRadius: 8,
     padding: 10,
@@ -161,12 +232,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     textAlign: "center",
-  },
-  errorHint: {
-    color: Colors.muted,
-    fontSize: 13,
-    textAlign: "center",
-    lineHeight: 20,
   },
   emptyBox: {
     flex: 1,

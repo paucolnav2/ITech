@@ -32,7 +32,7 @@ const SensorDetail = () => {
   const normalCount = readings.length - anomalyCount;
   const lastReading = readings[0];
   const typeColor = sensor
-    ? (SensorTypeColors[sensor.sensorType] ?? Colors.accent)
+    ? (SensorTypeColors[sensor.sensorTypes?.[0] ?? ''] ?? Colors.accent)
     : Colors.accent;
 
   const maxValue = readings.length
@@ -63,7 +63,13 @@ const SensorDetail = () => {
             </Text>
             <Text style={styles.sensorSubtitle}>ID: {sensorId} · Máquina #{sensor?.machineID ?? "—"}</Text>
 
-            {sensor && <SensorTypeBadge type={sensor.sensorType} />}
+            {sensor && (
+              <View style={styles.badgesRow}>
+                {sensor.sensorTypes.map((type) => (
+                  <SensorTypeBadge key={type} type={type} />
+                ))}
+              </View>
+            )}
 
             {lastReading && (
               <View style={[styles.lastReadingBox, { borderColor: typeColor + "40" }]}>
@@ -131,10 +137,6 @@ const SensorDetail = () => {
             <View style={styles.errorBox}>
               <Ionicons name="cloud-offline" size={40} color={Colors.muted} />
               <Text style={styles.errorText}>{error}</Text>
-              <Text style={styles.errorHint}>
-                El endpoint /sensor-data/{sensorId} aún no está implementado en el servidor Java.{"\n"}
-                Añadir ruta que retorne las filas de sensor_data para este sensor.
-              </Text>
             </View>
           ) : readings.length === 0 ? (
             <View style={styles.emptyBox}>
@@ -215,6 +217,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.cardBorder,
     gap: 14,
+  },
+  badgesRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 4,
   },
   iconWrap: {
     width: 60,
@@ -360,12 +367,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "600",
     textAlign: "center",
-  },
-  errorHint: {
-    color: Colors.muted,
-    fontSize: 12,
-    textAlign: "center",
-    lineHeight: 18,
   },
   emptyBox: {
     alignItems: "center",

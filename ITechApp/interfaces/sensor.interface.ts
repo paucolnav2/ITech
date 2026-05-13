@@ -1,6 +1,6 @@
 export interface Sensor {
   sensorID: number;
-  sensorType: string;
+  sensorTypes: string[];
   machineID: number;
   sensorName: string;
 }

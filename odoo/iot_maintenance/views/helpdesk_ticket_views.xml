@@ -128,36 +128,26 @@
         </field>
     </record>
 
+
     <!-- Search view -->
     <record id="view_helpdesk_ticket_search" model="ir.ui.view">
         <field name="name">helpdesk.ticket.search</field>
         <field name="model">helpdesk.ticket</field>
         <field name="arch" type="xml">
-            <search string="Search Tickets">
-                <field name="name" string="Subject"/>
-                <field name="description"/>
+            <search>
+                <field name="name"/>
                 <field name="assigned_to"/>
                 <filter string="New" name="filter_new"
                         domain="[('state','=','new')]"/>
                 <filter string="In Progress" name="filter_in_progress"
-                        domain="[('state','in',['assigned','in_progress'])]"/>
+                        domain="[('state','=','assigned')]"/>
                 <filter string="Resolved" name="filter_resolved"
                         domain="[('state','=','resolved')]"/>
-                <filter string="Critical Priority" name="filter_critical"
-                        domain="[('priority','=','2')]"/>
                 <separator/>
-                <filter string="My Tickets" name="filter_mine"
-                        domain="[('assigned_to','=',uid)]"/>
-                <filter string="Unassigned" name="filter_unassigned"
-                        domain="[('assigned_to','=',False)]"/>
-                <group expand="0" string="Group By">
-                    <filter string="Status" name="group_state"
-                            context="{'group_by': 'state'}"/>
-                    <filter string="Priority" name="group_priority"
-                            context="{'group_by': 'priority'}"/>
-                    <filter string="Assigned To" name="group_user"
-                            context="{'group_by': 'assigned_to'}"/>
-                </group>
+                <filter string="Group by State" name="group_state"
+                        context="{'group_by':'state'}"/>
+                <filter string="Group by Assigned To" name="group_assigned"
+                        context="{'group_by':'assigned_to'}"/>
             </search>
         </field>
     </record>

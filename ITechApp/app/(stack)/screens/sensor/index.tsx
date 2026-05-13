@@ -29,7 +29,7 @@ const SensorDetail = () => {
 
   const anomalyCount = readings.filter((r) => r.isAnomaly).length;
   const lastReading = readings[0];
-  const typeColor = sensor ? (SensorTypeColors[sensor.sensorType] ?? Colors.accent) : Colors.accent;
+  const typeColor = sensor ? (SensorTypeColors[sensor.sensorTypes?.[0] ?? ''] ?? Colors.accent) : Colors.accent;
 
   return (
     <ScrollView
@@ -57,7 +57,9 @@ const SensorDetail = () => {
 
         {sensor && (
           <View style={styles.badgeRow}>
-            <SensorTypeBadge type={sensor.sensorType} />
+            {sensor.sensorTypes.map((type) => (
+              <SensorTypeBadge key={type} type={type} />
+            ))}
           </View>
         )}
 
@@ -105,9 +107,6 @@ const SensorDetail = () => {
         <View style={styles.errorBox}>
           <Ionicons name="cloud-offline" size={32} color={Colors.muted} />
           <Text style={styles.errorText}>{error}</Text>
-          <Text style={styles.errorHint}>
-            El endpoint /sensor-data/{sensorId} aún no está implementado en el servidor Java
-          </Text>
         </View>
       ) : readings.length === 0 ? (
         <View style={styles.emptyBox}>
@@ -195,6 +194,9 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   badgeRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 4,
     marginBottom: 14,
   },
   lastReadingCard: {
@@ -287,11 +289,6 @@ const styles = StyleSheet.create({
     color: Colors.danger,
     fontSize: 13,
     fontWeight: "600",
-    textAlign: "center",
-  },
-  errorHint: {
-    color: Colors.muted,
-    fontSize: 12,
     textAlign: "center",
   },
   emptyBox: {

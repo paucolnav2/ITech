@@ -1,12 +1,10 @@
 import SensorTypeBadge from "@/components/SensorTypeBadge";
-import StatusBadge from "@/components/StatusBadge";
 import { Colors } from "@/constants/theme";
 import { useMachine, useMachineSensors } from "@/hooks/useMachines";
 import { useSensors } from "@/hooks/useSensors";
 import { Sensor } from "@/interfaces/sensor.interface";
 import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
-import { setParams } from "expo-router/build/global-state/routing";
 import React, { useMemo } from "react";
 import {
   ActivityIndicator,
@@ -22,8 +20,8 @@ const MaquinaDetail = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const machineId = Number(id);
 
-  const { data: machine, loading: loadingMachine, error: errorMachine } = useMachine(machineId);
-  const { data: machineSensors, error: errorSensors } = useMachineSensors(machineId);
+  const { data: machine, loading: loadingMachine } = useMachine(machineId);
+  const { data: machineSensors } = useMachineSensors(machineId);
   const { data: allSensors, loading: loadingAll } = useSensors();
 
   const fallbackSensors = useMemo(
@@ -48,22 +46,32 @@ const MaquinaDetail = () => {
 
             {machine && (
               <View style={styles.statusSection}>
-                <StatusBadge isGreen={machine.hasGreenState} size="large" />
+                <View
+                  style={[
+                    styles.stateBanner,
+                    machine.hasGreenState ? styles.stateBannerGreen : styles.stateBannerRed,
+                  ]}
+                >
+                  <Ionicons
+                    name={machine.hasGreenState ? "checkmark-circle" : "warning"}
+                    size={18}
+                    color={machine.hasGreenState ? Colors.success : Colors.danger}
+                  />
+                  <Text
+                    style={[
+                      styles.stateBannerText,
+                      { color: machine.hasGreenState ? Colors.success : Colors.danger },
+                    ]}
+                  >
+                    {machine.hasGreenState ? "MÁQUINA OPERATIVA" : "MÁQUINA EN ALERTA"}
+                  </Text>
+                </View>
                 <View style={styles.detailItem}>
                   <Ionicons name="business" size={14} color={Colors.muted} />
                   <Text style={styles.detailText}>
                     Fábrica ID: {machine.factoryId}
                   </Text>
                 </View>
-              </View>
-            )}
-
-            {errorMachine && (
-              <View style={styles.infoBanner}>
-                <Ionicons name="information-circle" size={14} color={Colors.warning} />
-                <Text style={styles.infoBannerText}>
-                  Endpoint /machines/{machineId} no implementado. Mostrando sensores disponibles.
-                </Text>
               </View>
             )}
 
@@ -95,7 +103,7 @@ const MaquinaDetail = () => {
                   key={item.sensorID}
                   style={({ pressed }) => [styles.sensorCard, pressed && { opacity: 0.8 }]}
                   onPress={() =>
-                    router.push("../sensor", setParams({ id: item.sensorID }))
+                    router.push({ pathname: "/screens/sensor", params: { id: item.sensorID } })
                   }
                 >
                   <View style={styles.sensorCardTop}>
@@ -106,7 +114,11 @@ const MaquinaDetail = () => {
                     {item.sensorName}
                   </Text>
                   <View style={styles.sensorCardFooter}>
-                    <SensorTypeBadge type={item.sensorType} />
+                    <View style={styles.badgesRow}>
+                      {item.sensorTypes.map((type) => (
+                        <SensorTypeBadge key={type} type={type} />
+                      ))}
+                    </View>
                     <Ionicons name="chevron-forward" size={14} color={Colors.muted} />
                   </View>
                 </Pressable>
@@ -172,6 +184,28 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: Colors.cardBorder,
   },
+  stateBanner: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderWidth: 1,
+  },
+  stateBannerGreen: {
+    backgroundColor: Colors.success + "15",
+    borderColor: Colors.success + "40",
+  },
+  stateBannerRed: {
+    backgroundColor: Colors.danger + "15",
+    borderColor: Colors.danger + "40",
+  },
+  stateBannerText: {
+    fontSize: 13,
+    fontWeight: "700",
+    letterSpacing: 0.5,
+  },
   detailItem: {
     flexDirection: "row",
     alignItems: "center",
@@ -180,20 +214,6 @@ const styles = StyleSheet.create({
   detailText: {
     color: Colors.muted,
     fontSize: 13,
-  },
-  infoBanner: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    gap: 8,
-    backgroundColor: Colors.warning + "15",
-    borderRadius: 8,
-    padding: 10,
-  },
-  infoBannerText: {
-    color: Colors.warning,
-    fontSize: 12,
-    flex: 1,
-    lineHeight: 18,
   },
   statsBox: {
     flexDirection: "row",
@@ -254,7 +274,14 @@ const styles = StyleSheet.create({
   sensorCardFooter: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
+    alignItems: "flex-start",
+    gap: 4,
+  },
+  badgesRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 4,
+    flex: 1,
   },
   loader: {
     marginTop: 40,

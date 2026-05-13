@@ -47,6 +47,7 @@ services:
       PASSWORD: odoo
     volumes:
       - ./odoo:/mnt/extra-addons
+      - odoo_filestore:/var/lib/odoo
     command: odoo -i base -d odoo --without-demo=all
     networks:
       - itech_network
@@ -81,6 +82,7 @@ services:
 volumes:
   mysql_data:
   postgres_data:
+  odoo_filestore:
 
 networks:
   itech_network:

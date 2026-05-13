@@ -14,7 +14,11 @@ interface MachineCardProps {
 const MachineCard = ({ machine, sensorCount, onPress }: MachineCardProps) => {
   return (
     <Pressable
-      style={({ pressed }) => [styles.card, pressed && { opacity: 0.85 }]}
+      style={({ pressed }) => [
+        styles.card,
+        { borderLeftColor: machine.hasGreenState ? Colors.success : Colors.danger },
+        pressed && { opacity: 0.85 },
+      ]}
       onPress={onPress}
     >
       <View style={styles.header}>
@@ -46,6 +50,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderWidth: 1,
     borderColor: Colors.cardBorder,
+    borderLeftWidth: 3,
   },
   header: {
     flexDirection: "row",

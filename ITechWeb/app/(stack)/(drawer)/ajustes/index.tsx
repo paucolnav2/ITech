@@ -11,18 +11,6 @@ import {
   View,
 } from "react-native";
 
-const ENDPOINTS = [
-  { path: "GET /sensors", desc: "Lista todos los sensores registrados", available: true },
-  { path: "GET /machines", desc: "Lista todas las máquinas de la planta", available: false },
-  { path: "GET /machines/{id}", desc: "Detalle y estado de una máquina específica", available: false },
-  { path: "GET /machines/{id}/sensors", desc: "Sensores asignados a una máquina", available: false },
-  { path: "GET /factories", desc: "Lista todas las instalaciones/fábricas", available: false },
-  { path: "GET /factories/{id}", desc: "Detalle de una fábrica específica", available: false },
-  { path: "GET /factories/{id}/machines", desc: "Máquinas de una fábrica concreta", available: false },
-  { path: "GET /sensor-data/{id}", desc: "Historial de lecturas de un sensor", available: false },
-  { path: "GET /anomalies", desc: "Anomalías recientes detectadas (is_anomaly=true)", available: false },
-];
-
 const Ajustes = () => {
   const [testing, setTesting] = useState(false);
   const [serverStatus, setServerStatus] = useState<"unknown" | "online" | "offline">("unknown");
@@ -96,39 +84,6 @@ const Ajustes = () => {
                 {testing ? "Comprobando..." : "Probar conexión con GET /sensors"}
               </Text>
             </TouchableOpacity>
-          </View>
-        </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Estado de endpoints API</Text>
-
-          <View style={styles.card}>
-            {ENDPOINTS.map((ep, idx) => (
-              <View
-                key={ep.path}
-                style={[
-                  styles.endpoint,
-                  idx < ENDPOINTS.length - 1 && styles.endpointBorder,
-                ]}
-              >
-                <View style={[styles.endpointStatus, { backgroundColor: ep.available ? Colors.success + "20" : Colors.muted + "15" }]}>
-                  <Ionicons
-                    name={ep.available ? "checkmark-circle" : "time"}
-                    size={16}
-                    color={ep.available ? Colors.success : Colors.muted}
-                  />
-                </View>
-                <View style={styles.endpointInfo}>
-                  <Text style={[styles.endpointPath, ep.available && { color: Colors.success }]}>
-                    {ep.path}
-                  </Text>
-                  <Text style={styles.endpointDesc}>{ep.desc}</Text>
-                </View>
-                <Text style={[styles.endpointLabel, { color: ep.available ? Colors.success : Colors.muted }]}>
-                  {ep.available ? "Activo" : "Pendiente"}
-                </Text>
-              </View>
-            ))}
           </View>
         </View>
 
@@ -235,40 +190,5 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
     fontSize: 14,
-  },
-  endpoint: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 14,
-    gap: 12,
-  },
-  endpointBorder: {
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.cardBorder,
-  },
-  endpointStatus: {
-    width: 32,
-    height: 32,
-    borderRadius: 8,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  endpointInfo: {
-    flex: 1,
-  },
-  endpointPath: {
-    color: Colors.text,
-    fontSize: 13,
-    fontFamily: "monospace",
-    fontWeight: "600",
-  },
-  endpointDesc: {
-    color: Colors.muted,
-    fontSize: 12,
-    marginTop: 2,
-  },
-  endpointLabel: {
-    fontSize: 12,
-    fontWeight: "600",
   },
 });
