@@ -8,7 +8,6 @@ import { router } from "expo-router";
 import React, { useMemo } from "react";
 import {
   ActivityIndicator,
-  FlatList,
   RefreshControl,
   ScrollView,
   StyleSheet,
@@ -41,16 +40,6 @@ const Dashboard = () => {
     const alert = total - ok;
     return { total, ok, alert };
   }, [machines]);
-
-  const renderMachine = ({ item }: { item: Machine }) => (
-    <MachineCard
-      machine={item}
-      sensorCount={sensorCountByMachine[item.id]}
-      onPress={() =>
-        router.push({ pathname: "../../../../screens/maquina", params: { id: item.id } })
-      }
-    />
-  );
 
   return (
     <ScrollView
@@ -119,7 +108,7 @@ const Dashboard = () => {
                 machine={machine}
                 sensorCount={sensorCountByMachine[machine.id]}
                 onPress={() =>
-                  router.push({ pathname: "../../../../screens/maquina", params: { id: machine.id } })
+                  router.push({ pathname: "/screens/maquina", params: { id: machine.id } })
                 }
               />
             </View>
