@@ -47,7 +47,7 @@ const Dashboard = () => {
       machine={item}
       sensorCount={sensorCountByMachine[item.id]}
       onPress={() =>
-        router.push({ pathname: "../../../../screens/maquina", params: { id: item.id } })
+        router.push({ pathname: "/screens/maquina", params: { id: item.id } })
       }
     />
   );

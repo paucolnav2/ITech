@@ -46,7 +46,7 @@ const Sensores = () => {
         pressed && { opacity: 0.8 },
       ]}
       onPress={() =>
-        router.push({ pathname: "../../../../screens/sensor", params: { id: item.sensorID } })
+        router.push({ pathname: "/screens/sensor", params: { id: item.sensorID } })
       }
     >
       <View style={styles.cardHeader}>
