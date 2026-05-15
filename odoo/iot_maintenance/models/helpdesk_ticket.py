@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from odoo.exceptions import UserError
 
 
 class HelpdeskTicket(models.Model):
@@ -14,6 +15,7 @@ class HelpdeskTicket(models.Model):
     state = fields.Selection(
         selection=[
             ('new', 'New'),
+            ('opened', 'Opened'),
             ('assigned', 'Assigned'),
             ('in_progress', 'In Progress'),
             ('resolved', 'Resolved'),
@@ -50,7 +52,12 @@ class HelpdeskTicket(models.Model):
         tickets = super().create(vals_list)
         return tickets
 
+    def action_open(self):
+        self.write({'state': 'opened'})
+
     def action_assign(self):
+        if not self.assigned_to:
+            raise UserError("You must select a technician before assigning the ticket.")
         self.write({'state': 'assigned'})
 
     def action_start(self):

@@ -7,17 +7,13 @@
         <field name="model">helpdesk.ticket</field>
         <field name="arch" type="xml">
             <list string="Maintenance Tickets"
-                  decoration-danger="state == 'new'"
-                  decoration-warning="state == 'assigned' or state == 'in_progress'"
+                  decoration-danger="state in ('new','opened')"
+                  decoration-warning="state in ('assigned','in_progress')"
                   decoration-success="state == 'resolved'"
                   decoration-muted="state == 'cancelled'">
                 <field name="name"/>
                 <field name="priority" widget="priority"/>
-                <field name="state" widget="badge"
-                       decoration-danger="state == 'new'"
-                       decoration-warning="state in ('assigned','in_progress')"
-                       decoration-success="state == 'resolved'"
-                       decoration-muted="state == 'cancelled'"/>
+                <field name="state"/>
                 <field name="assigned_to"/>
                 <field name="create_date" string="Detected On"/>
                 <field name="close_date"/>
@@ -32,11 +28,16 @@
         <field name="arch" type="xml">
             <form string="Maintenance Ticket">
                 <header>
+                    <button name="action_open"
+                            string="Open"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'new'"/>
                     <button name="action_assign"
                             string="Assign"
                             type="object"
                             class="btn-primary"
-                            invisible="state != 'new'"/>
+                            invisible="state != 'opened' or not assigned_to"/>
                     <button name="action_start"
                             string="Start Intervention"
                             type="object"
@@ -56,7 +57,7 @@
                             type="object"
                             invisible="state not in ('resolved','cancelled')"/>
                     <field name="state" widget="statusbar"
-                           statusbar_visible="new,assigned,in_progress,resolved"/>
+                           statusbar_visible="new,opened,assigned,in_progress,resolved"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -137,10 +138,14 @@
             <search>
                 <field name="name"/>
                 <field name="assigned_to"/>
+                <filter string="Active" name="filter_active"
+                        domain="[('state','not in',['resolved','cancelled'])]"/>
                 <filter string="New" name="filter_new"
                         domain="[('state','=','new')]"/>
+                <filter string="Opened" name="filter_opened"
+                        domain="[('state','=','opened')]"/>
                 <filter string="In Progress" name="filter_in_progress"
-                        domain="[('state','=','assigned')]"/>
+                        domain="[('state','in',['assigned','in_progress'])]"/>
                 <filter string="Resolved" name="filter_resolved"
                         domain="[('state','=','resolved')]"/>
                 <separator/>
@@ -157,7 +162,7 @@
         <field name="name">Maintenance Tickets</field>
         <field name="res_model">helpdesk.ticket</field>
         <field name="view_mode">list,kanban,form</field>
-        <field name="context">{'search_default_filter_new': 1}</field>
+        <field name="context">{'search_default_filter_active': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No maintenance tickets yet.
