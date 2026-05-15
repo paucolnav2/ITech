@@ -7,6 +7,7 @@ import com.itech.database.DatabaseManager;
 import com.itech.odoo.OdooClient;
 import com.itech.utils.classes.Factory;
 import com.itech.utils.classes.Machine;
+import com.itech.utils.helpers.GeneralParser;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,16 +16,16 @@ import java.sql.SQLException;
 
 
 public class AnomalyHandler {
-    public static void handleAnomaly (String dataUnit, Integer sensorId) {
+    public static void handleAnomaly(String dataUnit, String sensorType, Integer sensorId, double readingValue) {
         if (ConfigLoader.getMultipleAnomalyReportingAmount() == 1) {
-            alertAnomaly(sensorId);
+            alertAnomaly(sensorId, sensorType, dataUnit, readingValue);
         }
         else if (checkMultipleAnomaly(dataUnit, sensorId)) {
-            alertAnomaly(sensorId);
+            alertAnomaly(sensorId, sensorType, dataUnit, readingValue);
         }
     }
 
-    public static void alertAnomaly(Integer sensorId) {
+    public static void alertAnomaly(Integer sensorId, String sensorType, String dataUnit, double readingValue) {
         Machine machine = MachineDAO.getMachineBySensorId(sensorId);
         Factory factory = FactoryDAO.getFactoryByMachineId(machine.getFactoryId());
 
@@ -34,7 +35,7 @@ public class AnomalyHandler {
 
         String name = "Anomaly detected in machine "+machine.getId()+" named \""+machine.getName()+"\".";
 
-        String description = "Sensor with id "+sensorId+" detected dangerous anomaly on "+machine.getId()+" named \""+machine.getName()+"\" located on factory with id "+factory.getId()+" named \""+factory.getName()+"\".";
+        String description = "Sensor "+sensorId+" which measures "+ sensorType +" detected "+readingValue+" "+dataUnit+". Dangerous anomaly on machine "+machine.getId()+" named \""+machine.getName()+"\" located on factory with id "+factory.getId()+" named \""+factory.getName()+"\".";
 
         OdooClient.createTicket(UID, name, description);
     }

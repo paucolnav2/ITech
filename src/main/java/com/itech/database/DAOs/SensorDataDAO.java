@@ -26,15 +26,16 @@ public class SensorDataDAO {
             statement.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
             String dataUnit = GeneralParser.dataTypeToDefaultUnit(sensorType);
             statement.setString(3, dataUnit);
-            statement.setDouble(4, Double.parseDouble(sensorData[2]));
+            double readingValue = Double.parseDouble(sensorData[2]);
+            statement.setDouble(4, readingValue);
 
-            boolean isAnomaly = GeneralParser.valueIsAnomaly(sensorType, Double.parseDouble(sensorData[2]));
+            boolean isAnomaly = GeneralParser.valueIsAnomaly(sensorType, readingValue);
             statement.setBoolean(5, isAnomaly);
 
             statement.execute();
 
             if (isAnomaly) {
-                AnomalyHandler.handleAnomaly(dataUnit, sensorId);
+                AnomalyHandler.handleAnomaly(dataUnit, sensorType, sensorId, readingValue);
             } else {
                 AnomalyHandler.checkRecovery(sensorId);
             }
