@@ -1,5 +1,5 @@
 import SensorTypeBadge from "@/components/SensorTypeBadge";
-import { Colors } from "@/constants/theme";
+import { Colors, SensorTypeColors } from "@/constants/theme";
 import { useMachines } from "@/hooks/useMachines";
 import { useSensors } from "@/hooks/useSensors";
 import { Sensor } from "@/interfaces/sensor.interface";
@@ -11,16 +11,20 @@ import {
   FlatList,
   Pressable,
   RefreshControl,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
   View,
 } from "react-native";
 
+const SENSOR_TYPES = ["TODOS", "TEMPERATURE", "HUMIDITY", "VIBRATION", "PRESSURE", "LIGHT", "SOUND", "MOISTURE"];
+
 const Sensores = () => {
   const { data, loading, error, refetch } = useSensors();
   const { data: machines } = useMachines();
   const [query, setQuery] = useState("");
+  const [activeType, setActiveType] = useState("TODOS");
 
   const machineStateMap = useMemo(() => {
     const map: Record<number, boolean> = {};
@@ -28,13 +32,29 @@ const Sensores = () => {
     return map;
   }, [machines]);
 
-  const filtered = query.trim()
-    ? data.filter(
+  const countByType = useMemo(() => {
+    const map: Record<string, number> = {};
+    data.forEach((s) => {
+      s.sensorTypes.forEach((t) => { map[t] = (map[t] ?? 0) + 1; });
+    });
+    return map;
+  }, [data]);
+
+  const filtered = useMemo(() => {
+    let result = data;
+    if (activeType !== "TODOS") {
+      result = result.filter((s) => s.sensorTypes.includes(activeType));
+    }
+    if (query.trim()) {
+      result = result.filter(
         (s) =>
           s.sensorName.toLowerCase().includes(query.toLowerCase()) ||
-          s.sensorTypes.some((t) => t.toLowerCase().includes(query.toLowerCase())),
-      )
-    : data;
+          s.sensorTypes.some((t) => t.toLowerCase().includes(query.toLowerCase())) ||
+          s.machineID.toString().includes(query),
+      );
+    }
+    return result;
+  }, [data, query, activeType]);
 
   const renderItem = ({ item }: { item: Sensor }) => {
     const machineIsGreen = machineStateMap[item.machineID] ?? true;
@@ -81,7 +101,7 @@ const Sensores = () => {
         <Ionicons name="search" size={16} color={Colors.muted} />
         <TextInput
           style={styles.searchInput}
-          placeholder="Buscar por nombre o tipo..."
+          placeholder="Buscar sensor o máquina..."
           placeholderTextColor={Colors.muted}
           value={query}
           onChangeText={setQuery}
@@ -93,6 +113,31 @@ const Sensores = () => {
           </Pressable>
         )}
       </View>
+
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={styles.filterScroll}
+        contentContainerStyle={styles.filterRow}
+      >
+        {SENSOR_TYPES.map((type) => {
+          const isActive = activeType === type;
+          const color = type === "TODOS" ? Colors.primary : (SensorTypeColors[type] ?? Colors.muted);
+          const count = type === "TODOS" ? data.length : (countByType[type] ?? 0);
+          return (
+            <Pressable
+              key={type}
+              style={[styles.filterChip, isActive && { backgroundColor: color + "25", borderColor: color }]}
+              onPress={() => setActiveType(type)}
+            >
+              <Text style={[styles.filterText, isActive && { color }]}>
+                {type === "TODOS" ? "Todos" : type}
+              </Text>
+              <Text style={[styles.filterCount, isActive && { color }]}>{count}</Text>
+            </Pressable>
+          );
+        })}
+      </ScrollView>
 
       {loading && data.length === 0 ? (
         <ActivityIndicator color={Colors.primary} style={styles.loader} size="large" />
@@ -117,7 +162,7 @@ const Sensores = () => {
           }
           ListEmptyComponent={
             <Text style={styles.emptyText}>
-              {query ? "Sin resultados para tu búsqueda" : "No hay sensores"}
+              {query || activeType !== "TODOS" ? "Sin resultados para los filtros actuales" : "No hay sensores"}
             </Text>
           }
         />
@@ -145,6 +190,38 @@ const styles = StyleSheet.create({
     fontSize: 13,
     marginBottom: 16,
     marginTop: 4,
+  },
+  filterScroll: {
+    marginBottom: 14,
+  },
+  filterRow: {
+    flexDirection: "row",
+    gap: 8,
+    paddingRight: 16,
+  },
+  filterChip: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: Colors.cardBorder,
+    backgroundColor: Colors.card,
+  },
+  filterText: {
+    color: Colors.muted,
+    fontSize: 12,
+    fontWeight: "600",
+  },
+  filterCount: {
+    color: Colors.muted,
+    fontSize: 11,
+    backgroundColor: Colors.cardBorder,
+    borderRadius: 10,
+    paddingHorizontal: 5,
+    paddingVertical: 1,
   },
   searchBox: {
     flexDirection: "row",

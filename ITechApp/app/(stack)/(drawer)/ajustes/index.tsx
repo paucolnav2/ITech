@@ -4,7 +4,6 @@ import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import {
   ActivityIndicator,
-  Alert,
   Platform,
   ScrollView,
   StyleSheet,
@@ -36,10 +35,10 @@ const Ajustes = () => {
     return Colors.muted;
   };
 
-  const getStatusText = () => {
-    if (serverStatus === "online") return "Servidor en línea";
-    if (serverStatus === "offline") return "Servidor fuera de línea";
-    return "Estado desconocido";
+  const getStatusIcon = () => {
+    if (serverStatus === "online") return "checkmark-circle";
+    if (serverStatus === "offline") return "close-circle";
+    return "help-circle";
   };
 
   const apiUrl =
@@ -64,11 +63,15 @@ const Ajustes = () => {
           </View>
 
           <View style={[styles.row, styles.rowBorder]}>
-            <Ionicons name="ellipse" size={14} color={getStatusColor()} />
+            <Ionicons name={getStatusIcon()} size={18} color={getStatusColor()} />
             <View style={styles.info}>
               <Text style={styles.label}>Estado de conexión</Text>
               <Text style={[styles.value, { color: getStatusColor() }]}>
-                {getStatusText()}
+                {serverStatus === "online"
+                  ? "Servidor en línea"
+                  : serverStatus === "offline"
+                  ? "Servidor fuera de línea"
+                  : "Sin comprobar"}
               </Text>
             </View>
             {testing && <ActivityIndicator size="small" color={Colors.primary} />}

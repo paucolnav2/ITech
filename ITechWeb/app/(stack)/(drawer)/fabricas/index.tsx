@@ -36,8 +36,6 @@ const Fabricas = () => {
         <View style={styles.errorBox}>
           <Ionicons name="cloud-offline" size={48} color={Colors.muted} />
           <Text style={styles.errorText}>{error}</Text>
-          <Text style={styles.errorHint}>
-          </Text>
         </View>
       ) : (
         <FlatList
@@ -58,7 +56,7 @@ const Fabricas = () => {
             <Pressable
               style={({ pressed }) => [styles.card, pressed && { opacity: 0.85 }]}
               onPress={() =>
-                router.push({ pathname: "../../screens/fabrica", params: { id: item.id } })
+                router.push({ pathname: "/screens/fabrica", params: { id: item.id } })
               }
             >
               <View style={styles.cardTop}>
